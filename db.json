@@ -1,0 +1,47 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "name": "tirumala",
+      "pin": "987456",
+      "id": 2
+    },
+    {
+      "name": "jani",
+      "pin": "9632",
+      "id": 3
+    },
+    {
+      "name": "sam",
+      "pin": "123456",
+      "balance": "1000",
+      "id": 4
+    },
+    {
+      "name": "omesh",
+      "pin": "456321",
+      "balance": "6000",
+      "id": 5
+    },
+    {
+      "name": "rajesh",
+      "pin": "789456",
+      "balance": "null",
+      "id": 6
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

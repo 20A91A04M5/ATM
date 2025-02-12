@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+       
+        body {
+            background: linear-gradient(to bottom, #141e30, #243b55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            margin: 0;
+        }
+
+        
+        .atm-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        
+        .atm-screen {
+            background: linear-gradient(to right, #141e30, #243b55);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+       
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        
+        .atm-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        button {
+            width: 48%;
+            padding: 12px;
+            margin: 5px 0;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            box-shadow: 0px 0px 15px #00c6ff;
+            transform: scale(1.05);
+        }
+
+       
+        ul {
+            list-style: none;
+            max-height: 120px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        ul li {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        #amount {
+            display: inline-block;
+            font-weight: bold;
+            font-size: 22px;
+            color: #00c6ff;
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- <h1>Tiru ATM</h1>
+    <h3 id="h3">Amount:₹<span id="amount">1000</span></h3>
+    <input type="text" id="name" placeholder="enter name">
+    <input type="password" name="" id="pin" placeholder="setpin ">
+    <button onclick="setp()">setpin</button>
+    <button onclick="account()">check balance</button><br>
+    <input type="number" placeholder="enter amount" id="inp">
+    <button onclick="depo()">depo</button>
+    <button onclick="draw()">withdraw</button>
+    <ul id="hist"></ul> -->
+    <div class="atm-container">
+        <h1>Tiru ATM</h1>
+        <div class="atm-screen">
+            <h3 id="h3">Amount: ₹<span id="amount">1000</span></h3>
+        </div>
+        <input type="text" id="name" placeholder="Enter Name">
+        <input type="password" id="pin" placeholder="Set PIN">
+        <div class="atm-buttons">
+            <button onclick="setp()">Set PIN</button>
+            <button onclick="account()">Check Balance</button>
+        </div>
+        <input type="number" placeholder="Enter Amount" id="inp">
+        <div class="atm-buttons">
+            <button onclick="depo()">Deposit</button>
+            <button onclick="draw()">Withdraw</button>
+        </div>
+        <h3>Transaction History</h3>
+        <ul id="hist"></ul>
+    </div>
+    <script>
+        let amount=1000;
+        let inp1=document.getElementById("amount")
+        let his=document.getElementById("hist")
+        function update(){
+            inp1.textContent=amount
+            localStorage.setItem("balance",amount)
+        }
+        var amt=localStorage.getItem("balance")
+        function trans(a,in1){
+            let li=document.createElement("li")
+            li.textContent=`${a}:-₹${in1}`;
+            his.appendChild(li)
+        }
+        function setp(){
+            let in2=document.getElementById("pin")
+            let in3=document.getElementById("name")
+            let name=in3.value
+            let pin=in2.value
+            if(name!="" && pin!=""){
+            localStorage.setItem("pin",pin)
+            localStorage.setItem("name",name)
+            fetch("http://localhost:3000/posts",{
+                method:"POST",
+                headers:{"content-type":"application/json"},
+                body:JSON.stringify({
+                    "name":name,
+                    "pin":pin,
+                    "balance":`${amt}`
+                })       
+            }).then(res=>res.json()).then(data=>console.log(data))
+            in3.value=""
+            in2.value=""
+            }
+            else{
+                Swal.fire("enter name and pin")
+            }
+        }
+        function account(){
+            let gp=localStorage.getItem("pin")
+            let name=localStorage.getItem("name")
+            let a=prompt("enter your pin")
+            let b=prompt("enter your name")
+          
+                        
+            if(a==gp && b==name){
+                // alert("pin matched")
+                Swal.fire("Pin Matched");
+                let inp1=document.getElementById("amount")
+                inp1.style.display="inline-block";   
+            }else{
+                // alert("invalid name or pin")
+                Swal.fire("enter valid details..!");
+            }  
+        }
+
+        var name
+        var pin
+        let ppl=fetch("http://localhost:3000/posts",{
+            method:"GET",
+        }).then(res=>res.json()).then(data=>{
+            data.forEach((ppl) => {
+                name=ppl.name
+                pin=ppl.pin
+            });
+        })
+
+        
+
+        var in1
+        function depo(){
+            let in2=document.getElementById("pin")
+            let in3=document.getElementById("name")
+            in1=document.getElementById("inp")
+            let mon=parseFloat(in1.value)
+            if(name==`${in3.value}`&& pin==`${in2.value}`){
+                if(mon>0){
+                    amount+=mon;
+                    update()
+                    trans("deposit",mon)
+                    in1.value=""
+                }else{
+                    alert("invalid amount")
+                }
+            }else{
+                alert("not yours")
+            }
+        }
+
+        function draw(){
+            let in2=document.getElementById("pin")
+            let in3=document.getElementById("name")
+            in1=document.getElementById("inp")
+            let mon=parseFloat(in1.value)
+            if(name==`${in3.value}`&& pin==`${in2.value}`){
+                if(mon>0 && amount>1000){
+                    if(mon<=amount){
+                        amount-=mon
+                        update()
+                        trans("withdraw",mon)
+                        in1.value=""
+                    }else{
+                        alert("insufficent money")
+                        in1.value=""
+                    }
+                }
+                else{
+                    alert("balance insufficient")
+                    alert("add money to your accouunt")
+                    in1.value=""
+                }
+            }else{
+                alert("not yours")
+            }
+        }  
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>
+
+
+
+
